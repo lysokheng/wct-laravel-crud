@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
 
 class PostController extends Controller
 {
@@ -23,13 +25,26 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required',
             'body' => 'required',
-            'image' => 'required',
         ]);
+
+        $validator = Validator::make($request->all(), [
+            'image' => 'image|mimes:png,jpeg,jpg|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/home')->with('success', 'Post created unsuccessfully!');
+        }
+
         $post = new Post();
         $post->title = $request->title;
         $post->body = $request->body;
-        $post->image = $request->image;
-
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $extention = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extention;
+            $file->move('uploads/posts/', $filename);
+            $post->image = $filename;
+        }
         $post->save();
         return redirect('/home')->with('success', 'Post created successfully!');
     }
@@ -50,16 +65,38 @@ class PostController extends Controller
             'title' => 'required',
             'body' => 'required',
         ]);
+
+        $validator = Validator::make($request->all(), [
+            'image' => 'image|mimes:png,jpeg,jpg|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/home')->with('success', 'Post created unsuccessfully!');
+        }
+
         $post->title = $request->title;
         $post->body = $request->body;
-        $post->published_at = $request->published_at;
-
+        if ($request->hasfile('image')) {
+            $destination = 'uploads/posts/' . $post->image;
+            if (File::exists($destination)) {
+                File::delete($destination);
+            }
+            $file = $request->file('image');
+            $extention = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extention;
+            $file->move('uploads/posts/', $filename);
+            $post->image = $filename;
+        }
         $post->save();
         return redirect('/home')->with('success', 'Post updated successfully!');
     }
 
     public function destroy(Post $post)
     {
+        $destination = 'uploads/posts/' . $post->profile_image;
+        if (File::exists($destination)) {
+            File::delete($destination);
+        }
         $post->delete();
         return redirect('/home')->with('success', 'Post deleted successfully!');
     }

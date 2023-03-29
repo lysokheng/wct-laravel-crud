@@ -14,26 +14,29 @@
                         </div>
                     @endif
 
-                    <form action="/post/{{$post->id}}" method="post">
+                    <form action="/post/{{$post->id}}" method="post"  enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label for="">Post Title</label>
                             <input type="text" name="title" class="form-control" value="{{$post->title}}">
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label for="">Post Body</label>
                             <textarea name="body" id="" cols="30" rows="10" class="form-control">{{$post->body}}</textarea>
                         </div>
+                                                <div class="form-group mb-3">
 
-                        <div class="form-group">
-                            <label for="">Publish At</label>
-                            <input type="date" name="published_at" class="form-control" value="{{ date('Y-m-d', strtotime($post->published_at)) }}">
+                         <label for="">Post Image</label>
+                            <input type="file" name="image" class="form-control mb-3">
+                            <img src="{{ asset('uploads/posts/'.$post->image) }}" width="300" height="200" alt="Image">
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
+                        <div class="form-group mb-3">
+                            <button type="submit" class="btn btn-primary">Update Post</button>
+                        </div>
+                      </form>
 
                 </div>
             </div>

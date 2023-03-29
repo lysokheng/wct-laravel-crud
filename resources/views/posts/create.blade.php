@@ -14,28 +14,24 @@
                         </div>
                     @endif
 
-                    <form action="/post" method="post">
+                    <form action="/post" method="post" enctype="multipart/form-data">
                         @csrf
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label for="">Post Title</label>
                             <input type="text" name="title" class="form-control">
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label for="">Post Body</label>
                             <textarea name="body" id="" cols="30" rows="10" class="form-control"></textarea>
                         </div>
-                        <div class="form-group">
-                           <label>Post Image</label>
-                                <br>
-                                <input type="file" name="image" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="">Publish At</label>
-                            <input type="date" name="published_at" class="form-control">
+                        <div class="form-group mb-3">
+                           <label  for="">Post Image</label>
+                                <input type="file" name="image"  class="form-control">
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Submit</button>
+
+                        <button type="submit" class="btn btn-primary">Save Post</button>
                     </form>
 
                 </div>
